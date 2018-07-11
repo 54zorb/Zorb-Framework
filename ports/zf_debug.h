@@ -22,7 +22,7 @@
 extern "C" {
 #endif
 
-#include "uart1.h"
+#include "stdio.h"
 #include "stdbool.h"
 
 #define LOG_D 0; /* 信息等级：正常 */
@@ -40,9 +40,9 @@ extern "C" {
             code[6] = '0' + (char)rank;     \
             if (code[6] != '0')             \
             {                               \
-                Uart1_printf("%s", code);   \
+                printf("%s", code);         \
             }                               \
-            Uart1_printf(x);                \
+            printf(x);                      \
         } while(0)
     #else
         #define ZF_DEBUG(rank, x...)
