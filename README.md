@@ -27,9 +27,9 @@
 
 [3、状态机测试例子](https://www.cnblogs.com/54zorb/p/9285805.html)
 
-4、事件测试例子
+[4、事件测试例子](https://www.cnblogs.com/54zorb/p/9325298.html)
 
-5、定时器测试例子
+[5、定时器测试例子](https://www.cnblogs.com/54zorb/p/9325510.html)
 
 6、任务测试例子
 
