@@ -489,6 +489,8 @@ bool List_mallocNode(ListNode **ppNode, void **ppData,
     
     if (size > 0)
     {
+        ZF_ASSERT(ppData != (void **)0)
+        
         pData = (void *)ZF_MALLOC(size);
         if (pData == NULL)
         {
@@ -499,6 +501,9 @@ bool List_mallocNode(ListNode **ppNode, void **ppData,
         pNode->pData = pData;
         pNode->Size = size;
         pNode->IsExternData = false;
+        
+        /* Êä³ö */
+        *ppData = pData;
     }
     else
     {
@@ -509,7 +514,6 @@ bool List_mallocNode(ListNode **ppNode, void **ppData,
     
     /* Êä³ö */
     *ppNode = pNode;
-    *ppData = pData;
     
     return true;
 }
