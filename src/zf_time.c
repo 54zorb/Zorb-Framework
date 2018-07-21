@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * @file    zf_time.c
+  * @file    zf_time.h
   * @author  Zorb
   * @version V1.0.0
   * @date    2018-06-28
@@ -17,6 +17,9 @@
 
 #include "zf_time.h"
 #include "zf_timer.h"
+#include "zf_task.h"
+#include "zf_critical.h"
+#include "stdlib.h"
 
 /* 系统滴答数 */
 uint32_t ZF_tick = 0;
@@ -48,8 +51,30 @@ uint32_t ZF_getSystemTimeMS(void)
 ******************************************************************************/
 void ZF_delayTick(uint32_t tick)
 {
-    uint32_t startTick = ZF_getSystemTick();
-    while((ZF_getSystemTick() - startTick) < tick);
+    /* 有任务时的延时 */
+    if (TASK_IS_SYSTEM_RUN() && TASK_IS_SCHEDULE_ON())
+    {
+        /* SR变量 */
+        ZF_SR_VAL();
+        
+        /* 进入临界区 */
+        ZF_CRITICAL_ENTER();
+        
+        /* 当前任务延时 */
+        Task_delay(pCurrentTask, tick);
+        
+        /* 退出临界区 */
+        ZF_CRITICAL_EXIT();
+        
+        /* 任务调度 */
+        Task_schedule();
+    }
+    /* 没任务时的死延时 */
+    else
+    {
+        uint32_t startTick = ZF_getSystemTick();
+        while((ZF_getSystemTick() - startTick) < tick);
+    }
 }
 
 /******************************************************************************
@@ -64,6 +89,12 @@ void ZF_timeTick (void)
     
     /* 软件定时器程序 */
     Timer_process();
+    
+    /* 任务时间更新 */
+    Task_timeUpdate();
+    
+    /* 任务调度 */
+    Task_schedule();
 }
 
 /******************************** END OF FILE ********************************/

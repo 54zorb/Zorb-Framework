@@ -195,6 +195,9 @@ uint32_t EventHandler_getEventCount(EventHandler * const pEventHandler)
 ******************************************************************************/
 bool EventHandler_add(EventHandler * const pEventHandler, Event *pEvent)
 {
+    /* SR变量 */
+    ZF_SR_VAL();
+    
     ListNode *pNode;
     uint32_t i;
     uint32_t index; /* 插入事件位置索引 */
@@ -269,6 +272,9 @@ bool EventHandler_add(EventHandler * const pEventHandler, Event *pEvent)
 ******************************************************************************/
 bool EventHandler_delete(EventHandler * const pEventHandler, Event *pEvent)
 {
+    /* SR变量 */
+    ZF_SR_VAL();
+    
     ListNode *pNode;
     
     ZF_ASSERT(pEventHandler != (EventHandler *)0)
@@ -316,6 +322,9 @@ bool EventHandler_delete(EventHandler * const pEventHandler, Event *pEvent)
 ******************************************************************************/
 bool EventHandler_clear(EventHandler * const pEventHandler)
 {
+    /* SR变量 */
+    ZF_SR_VAL();
+    
     /* 返回结果 */
     bool res = true;
     
@@ -355,6 +364,9 @@ bool EventHandler_clear(EventHandler * const pEventHandler)
 ******************************************************************************/
 bool EventHandler_dispose(EventHandler * const pEventHandler)
 {
+    /* SR变量 */
+    ZF_SR_VAL();
+    
     ZF_ASSERT(pEventHandler != (EventHandler *)0)
     
     EventHandler_clear(pEventHandler);
@@ -381,6 +393,9 @@ bool EventHandler_dispose(EventHandler * const pEventHandler)
 ******************************************************************************/
 void EventHandler_execute(EventHandler * const pEventHandler)
 {
+    /* SR变量 */
+    ZF_SR_VAL();
+    
     Event *pEvent;
     
     ZF_ASSERT(pEventHandler != (EventHandler *)0)

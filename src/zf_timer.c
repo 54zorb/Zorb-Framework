@@ -21,6 +21,7 @@
 #include "zf_list.h"
 #include "zf_malloc.h"
 #include "zf_time.h"
+#include "zf_task.h"
 
 /* 打开定时器运行程序 */
 #define TIMER_PROCESS_ENABLE() mIsTimerProcessOn = true
@@ -177,6 +178,34 @@ bool Timer_dispose(Timer * const pTimer)
 }
 
 /******************************************************************************
+ * 描述  ：推送定时事件
+ * 参数  ：(in)-pTimer 定时器指针
+ * 返回  ：无
+******************************************************************************/
+static void Timer_postEvent(Timer *pTimer)
+{
+    /* 创建事件 */
+    Event *pEvent;
+    Event_create(&pEvent);
+    pEvent->Priority = pTimer->Priority;
+    pEvent->EventProcess = (IEventProcess)pTimer->TimerProcess;
+    pEvent->pArgList = NULL; 
+    
+    /* 推送事件 */
+    EVENT_POST(pTimer->pEventHandler, pEvent);
+    
+    /* 任务定时器 */
+    if (pTimer->pEventHandler == TASK_GET_IDLE_TASK_HANDLER())
+    {
+        /* 设置空闲任务等级 */
+        if (TASK_GET_IDLE_TASK()->Priority > pTimer->Priority)
+        {
+            TASK_GET_IDLE_TASK()->Priority = pTimer->Priority;
+        }
+    }
+}
+
+/******************************************************************************
  * 描述  ：后台运行程序(放在1ms内的循环里边)
  * 参数  ：无
  * 返回  ：无
@@ -218,7 +247,7 @@ void Timer_process(void)
                             pTimer->Stop(pTimer);
                         }
                         
-                        /* 推送事件 */
+                        /* 执行事件 */
                         if (pTimer->TimerProcess != NULL)
                         {
                             if (pTimer->pEventHandler == NULL)
@@ -228,16 +257,8 @@ void Timer_process(void)
                             }
                             else
                             {
-                                /* 创建事件 */
-                                Event *pEvent;
-                                Event_create(&pEvent);
-                                pEvent->Priority = pTimer->Priority;
-                                pEvent->EventProcess = 
-                                    (IEventProcess)pTimer->TimerProcess;
-                                pEvent->pArgList = NULL; 
-                                
                                 /* 推送事件 */
-                                EVENT_POST(pTimer->pEventHandler, pEvent);
+                                Timer_postEvent(pTimer);
                             }
                         }
                     }

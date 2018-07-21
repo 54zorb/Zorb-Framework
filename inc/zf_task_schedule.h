@@ -1,10 +1,10 @@
 /**
   *****************************************************************************
-  * @file    zf_includes.h
+  * @file    zf_task_schedule.h
   * @author  Zorb
   * @version V1.0.0
   * @date    2018-06-28
-  * @brief   包含zorb flamework用到的所有头文件
+  * @brief   任务调度算法的头文件
   *****************************************************************************
   * @history
   *
@@ -15,24 +15,24 @@
   *****************************************************************************
   */
 
-#ifndef __ZF_INCLUDES_H__
-#define __ZF_INCLUDES_H__
+#ifndef __ZF_TASK_SCHEDULE_H__
+#define __ZF_TASK_SCHEDULE_H__
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "zf_debug.h"
-#include "zf_assert.h"
-#include "zf_time.h"
-#include "zf_malloc.h"
-#include "zf_buffer.h"
-#include "zf_list.h"
-#include "zf_fsm.h"
-#include "zf_event.h"
-#include "zf_timer.h"
+#include "stdint.h"
+#include "stdbool.h"
 #include "zf_task.h"
 
-#endif /* __ZF_INCLUDES_H__ */
+/* 获取最高优先级任务 */
+Task *Task_getTopPriorityTask(void);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* __ZF_TASK_SCHEDULE_H__ */
 
 /******************************** END OF FILE ********************************/
