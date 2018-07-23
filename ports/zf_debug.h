@@ -40,14 +40,22 @@ extern "C" {
             code[6] = '0' + (char)rank;     \
             if (code[6] != '0')             \
             {                               \
-                printf("%s", code);         \
+                printf("\r\n\r\n%s", code); \
             }                               \
             printf(x);                      \
+            if (code[6] != '0')             \
+            {                               \
+                printf("%s\r\n\r\n", code); \
+            }                               \
         } while(0)
     #else
         #define ZF_DEBUG(rank, x...)
     #endif /* ZF_DEBUG_ON */
 #endif /* _ZF_DEBUG */
+
+#define ZF_DEBUG_D(x...) ZF_DEBUG(LOG_D, x)
+#define ZF_DEBUG_W(x...) ZF_DEBUG(LOG_W, x)
+#define ZF_DEBUG_E(x...) ZF_DEBUG(LOG_E, x)
 
 #ifdef __cplusplus
 }
