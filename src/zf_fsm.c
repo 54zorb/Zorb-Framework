@@ -341,21 +341,6 @@ bool Fsm_dispatch(Fsm * const pFsm, FsmSignal const signal)
     
     if (pFsm->IsRunning)
     {
-        if (pFsm->CurrentState != NULL)
-        {
-            /* 1:根状态机时调度
-               2:没设置触发状态时调度
-               3:正在触发状态时调度
-             */
-            if (pFsm->Owner == NULL || pFsm->OwnerTriggerState == NULL
-                || pFsm->OwnerTriggerState == pFsm->Owner->CurrentState)
-            {
-                pFsm->CurrentState(pFsm, signal);
-                
-                res = true;
-            }
-        }
-        
         if (pFsm->ChildList != NULL && pFsm->ChildList->Count > 0)
         {
             uint32_t i;
@@ -370,6 +355,21 @@ bool Fsm_dispatch(Fsm * const pFsm, FsmSignal const signal)
                 {
                     Fsm_dispatch(pChildFsm, signal);
                 }
+            }
+        }
+        
+        if (pFsm->CurrentState != NULL)
+        {
+            /* 1:根状态机时调度
+               2:没设置触发状态时调度
+               3:正在触发状态时调度
+             */
+            if (pFsm->Owner == NULL || pFsm->OwnerTriggerState == NULL
+                || pFsm->OwnerTriggerState == pFsm->Owner->CurrentState)
+            {
+                pFsm->CurrentState(pFsm, signal);
+                
+                res = true;
             }
         }
     }
