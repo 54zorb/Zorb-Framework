@@ -55,6 +55,7 @@ bool List_create(List **ppList)
     pList->DeleteElementAt = List_deleteElementAt;
     pList->RemoveElementAt = List_removeElementAt;
     pList->Clear = List_clear;
+    pList->Dispose = List_dispose;
     
     /* Êä³ö */
     *ppList = pList;

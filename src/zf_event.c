@@ -309,7 +309,7 @@ bool EventHandler_delete(EventHandler * const pEventHandler, Event *pEvent)
     /* 退出临界区 */
     ZF_CRITICAL_EXIT();
     
-    ZF_FREE(pEvent);
+    pEvent->Dispose(pEvent);
     
     return true;
 }
@@ -329,6 +329,7 @@ bool EventHandler_clear(EventHandler * const pEventHandler)
     bool res = true;
     
     uint32_t i;
+    Event *pEvent;
     
     ZF_ASSERT(pEventHandler != (EventHandler *)0)
     
@@ -344,8 +345,10 @@ bool EventHandler_clear(EventHandler * const pEventHandler)
     for (i = 0; i < pEventHandler->pEventList->Count; i++)
     {
         /* 释放所有事件 */
-        ZF_FREE(pEventHandler->pEventList
-            ->GetElementDataAt(pEventHandler->pEventList, i));
+        pEvent = (Event *)pEventHandler->pEventList
+            ->GetElementDataAt(pEventHandler->pEventList, i);
+        
+        pEvent->Dispose(pEvent);
     }
     
     res = pEventHandler->pEventList->Clear(pEventHandler->pEventList);
@@ -373,6 +376,9 @@ bool EventHandler_dispose(EventHandler * const pEventHandler)
     
     /* 进入临界区 */
     ZF_CRITICAL_ENTER();
+    
+    /* 清空事件列表(释放空间) */
+    EventHandler_clear(pEventHandler);
     
     pEventHandler->pEventList->Dispose(pEventHandler->pEventList);
     
