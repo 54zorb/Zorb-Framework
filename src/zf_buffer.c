@@ -249,6 +249,7 @@ bool RB_dropBytes(RingBuffer * const pRb, uint32_t n)
         }
         
         pRb->Head += len;
+        pRb->Head %= pRb->Size;
         pRb->Count -= len;
         
         res = true;
