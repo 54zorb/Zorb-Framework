@@ -192,12 +192,10 @@ uint32_t RB_getCount(RingBuffer * const pRb)
  * 参数  ：(in)-pRb     环形缓冲器结构体指针
  *         (out)-pArray 存放取出字节的地址
  *         (in)-n       要读取的字节个数
- * 返回  ：-true        成功
- *         -false       失败
+ * 返回  ：实际读取的字节个数
 ******************************************************************************/
-bool RB_readBytes(RingBuffer * const pRb, uint8_t *pArray, uint32_t n)
+uint32_t RB_readBytes(RingBuffer * const pRb, uint8_t *pArray, uint32_t n)
 {
-    bool res = false;
     uint32_t len;
     uint32_t i, index;
     
@@ -208,6 +206,7 @@ bool RB_readBytes(RingBuffer * const pRb, uint8_t *pArray, uint32_t n)
     if (!RB_isEmpty(pRb))
     {
         len = RB_getCount(pRb);
+        
         if (len > n)
         {
             len = n;
@@ -219,22 +218,20 @@ bool RB_readBytes(RingBuffer * const pRb, uint8_t *pArray, uint32_t n)
             *(pArray + i) = pRb->pBuf[index];
         }
         
-        res = true;
+        return len;
     }
     
-    return res;
+    return 0;
 }
 
 /******************************************************************************
  * 描述  ：丢弃n个字节(n超过最大数据数时全部丢弃)
  * 参数  ：(in)-pRb     环形缓冲器结构体指针
  *         (in)-n       要丢弃的字节个数
- * 返回  ：-true        成功
- *         -false       失败
+ * 返回  ：实际丢弃的字节个数
 ******************************************************************************/
-bool RB_dropBytes(RingBuffer * const pRb, uint32_t n)
+uint32_t RB_dropBytes(RingBuffer * const pRb, uint32_t n)
 {
-    bool res = false;
     uint32_t len;
     
     ZF_ASSERT(pRb != (RingBuffer *)0)
@@ -243,6 +240,7 @@ bool RB_dropBytes(RingBuffer * const pRb, uint32_t n)
     if (!RB_isEmpty(pRb))
     {
         len = RB_getCount(pRb);
+        
         if (len > n)
         {
             len = n;
@@ -252,10 +250,10 @@ bool RB_dropBytes(RingBuffer * const pRb, uint32_t n)
         pRb->Head %= pRb->Size;
         pRb->Count -= len;
         
-        res = true;
+        return len;
     }
     
-    return res;
+    return 0;
 }
 
 /******************************************************************************

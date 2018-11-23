@@ -51,11 +51,11 @@ typedef struct _RingBuffer
     uint32_t (*GetCount)(struct _RingBuffer * const pRb);
     
     /* 读取n个字节(n超过最大数据数时全部读出) */
-    bool (*ReadBytes)(struct _RingBuffer * const pRb, uint8_t *pArray,
+    uint32_t (*ReadBytes)(struct _RingBuffer * const pRb, uint8_t *pArray,
         uint32_t n);
     
     /* 丢弃n个字节(n超过最大数据数时全部丢弃) */
-    bool (*DropBytes)(struct _RingBuffer * const pRb, uint32_t n);
+    uint32_t (*DropBytes)(struct _RingBuffer * const pRb, uint32_t n);
     
     /* 清空缓冲器 */
     bool (*Clear)(struct _RingBuffer * const pRb);
@@ -83,10 +83,10 @@ bool RB_getByte(RingBuffer * const pRb, uint8_t *pByte);
 uint32_t RB_getCount(RingBuffer * const pRb);
 
 /* 读取n个字节(n超过最大数据数时全部读出) */
-bool RB_readBytes(RingBuffer * const pRb, uint8_t *pArray, uint32_t n);
+uint32_t RB_readBytes(RingBuffer * const pRb, uint8_t *pArray, uint32_t n);
 
 /* 丢弃n个字节(n超过最大数据数时全部丢弃) */
-bool RB_dropBytes(RingBuffer * const pRb, uint32_t n);
+uint32_t RB_dropBytes(RingBuffer * const pRb, uint32_t n);
 
 /* 清空缓冲器 */
 bool RB_clear(RingBuffer * const pRb);
