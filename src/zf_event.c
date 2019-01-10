@@ -372,8 +372,6 @@ bool EventHandler_dispose(EventHandler * const pEventHandler)
     
     ZF_ASSERT(pEventHandler != (EventHandler *)0)
     
-    EventHandler_clear(pEventHandler);
-    
     /* 进入临界区 */
     ZF_CRITICAL_ENTER();
     
