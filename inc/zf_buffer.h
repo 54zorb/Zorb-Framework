@@ -44,6 +44,10 @@ typedef struct _RingBuffer
     /* 压入一个字节 */
     bool (*SaveByte)(struct _RingBuffer * const pRb, uint8_t byte);
     
+    /* 压入n个字节的数据 */
+    uint32_t (*SaveRange)(struct _RingBuffer * const pRb, uint8_t *pArray,
+        uint32_t n);
+    
     /* 取出一个字节 */
     bool (*GetByte)(struct _RingBuffer * const pRb, uint8_t *pByte);
     
@@ -75,6 +79,9 @@ bool RB_isEmpty(RingBuffer * const pRb);
 
 /* 压入一个字节 */
 bool RB_saveByte(RingBuffer * const pRb, uint8_t byte);
+
+/* 压入n个字节的数据 */
+uint32_t RB_saveRange(RingBuffer * const pRb, uint8_t *pArray, uint32_t n);
 
 /* 取出一个字节 */
 bool RB_getByte(RingBuffer * const pRb, uint8_t *pByte);

@@ -69,6 +69,7 @@ bool RB_create(RingBuffer **ppRb, uint32_t size)
     pRb->IsFull = RB_isFull;
     pRb->IsEmpty = RB_isEmpty;
     pRb->SaveByte = RB_saveByte;
+    pRb->SaveRange = RB_saveRange;
     pRb->GetByte = RB_getByte;
     pRb->GetCount = RB_getCount;
     pRb->ReadBytes = RB_readBytes;
@@ -143,6 +144,45 @@ bool RB_saveByte(RingBuffer * const pRb, uint8_t byte)
         pRb->Count++;
         
         res = true;
+    }
+    
+    return res;
+}
+
+/******************************************************************************
+ * 描述  ：压入n个字节的数据
+ * 参数  ：(in)-pRb    环形缓冲器结构体指针
+ *         (in)-pData  要压入的数据的指针
+ *         (in)-len    要压入的数据的长度
+ * 返回  ：压入的数量
+******************************************************************************/
+uint32_t RB_saveRange(RingBuffer * const pRb, uint8_t *pArray, uint32_t n)
+{
+    uint32_t res = 0;
+    
+    if (pArray == 0)
+    {
+        return res;
+    }
+    
+    ZF_ASSERT(pRb != (RingBuffer *)0)
+    ZF_ASSERT(pRb->pBuf != (uint8_t *)0)
+    ZF_ASSERT(pArray != (uint8_t *)0)
+    
+    uint32_t i;
+    
+    for (i = 0; i < n; i++)
+    {
+        pRb->pBuf[pRb->Trail++] = *(pArray + i);
+        pRb->Trail %= pRb->Size;
+        pRb->Count++;
+        
+        res++;
+        
+        if (pRb->Count >= pRb->Size)
+        {
+            break;
+        }
     }
     
     return res;
